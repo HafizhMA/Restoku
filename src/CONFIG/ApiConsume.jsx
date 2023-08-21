@@ -1,21 +1,19 @@
+import axios from "axios";
+
 const baseUrl = "https://restaurant-api.dicoding.dev";
 
 async function postToApi(data) {
   try {
-    const response = await fetch(`${baseUrl}/review`, {
-      method: "POST",
+    const response = await axios.post(`${baseUrl}/review`, data, {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
     });
 
-    const responseData = await response.json();
-
-    if (!responseData.error) {
-      return { success: true, data: responseData };
+    if (!response.data.error) {
+      return { success: true, data: response.data };
     } else {
-      return { success: false, error: responseData.message };
+      return { success: false, error: response.data.message };
     }
   } catch (error) {
     return { success: false, error: error.message };
@@ -23,15 +21,21 @@ async function postToApi(data) {
 }
 
 async function getListRestaurants() {
-  const response = await fetch(`${baseUrl}/list`);
-  const data = await response.json();
-  return data.restaurants;
+  try {
+    const response = await axios.get(`${baseUrl}/list`);
+    return response.data.restaurants;
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
 }
 
 async function getDetailRestaurant(id) {
-  const response = await fetch(`${baseUrl}/detail/${id}`);
-  const data = await response.json();
-  return data.restaurant;
+  try {
+    const response = await axios.get(`${baseUrl}/detail/${id}`);
+    return response.data.restaurant;
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
 }
 
 export { postToApi, getListRestaurants, getDetailRestaurant };
