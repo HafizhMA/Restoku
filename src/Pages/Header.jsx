@@ -23,9 +23,12 @@ function Header() {
               </Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link href="#action2" disabled>
+              <Link
+                to="/favorite"
+                className="nav-link text-decoration-none text-black"
+              >
                 Favorite
-              </Nav.Link>
+              </Link>
             </Nav.Item>
           </Nav>
           {/* <Form className="d-flex">
