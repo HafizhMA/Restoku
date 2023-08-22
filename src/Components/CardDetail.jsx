@@ -20,21 +20,44 @@ function CardDetail() {
     review: "",
   });
 
-  async function fetchRestaurant() {
-    try {
-      const restaurantData = await getDetailRestaurant(id);
-      setRestaurant(restaurantData);
-    } catch (error) {
-      console.error("Error fetching restaurant details:", error);
-    }
-  }
-
   useEffect(() => {
+    async function fetchRestaurant() {
+      try {
+        const restaurantData = await getDetailRestaurant(id);
+        setRestaurant(restaurantData);
+      } catch (error) {
+        console.error("Error fetching restaurant details:", error);
+      }
+    }
+
+    // Cek apakah restoran ini sudah di-mark sebagai favorit
+    const favoriteRestaurants =
+      JSON.parse(localStorage.getItem("favoriteRestaurants")) || [];
+    setIsBookmarkFilled(favoriteRestaurants.includes(id));
+
     fetchRestaurant();
   }, [id]);
 
   const handleStarClick = () => {
     setIsBookmarkFilled(!isBookmarkFilled);
+
+    // Tambah atau hapus restoran dari daftar favorit di localStorage
+    const favoriteRestaurants =
+      JSON.parse(localStorage.getItem("favoriteRestaurants")) || [];
+
+    if (isBookmarkFilled) {
+      const index = favoriteRestaurants.indexOf(id);
+      if (index > -1) {
+        favoriteRestaurants.splice(index, 1);
+      }
+    } else {
+      favoriteRestaurants.push(id);
+    }
+
+    localStorage.setItem(
+      "favoriteRestaurants",
+      JSON.stringify(favoriteRestaurants)
+    );
   };
 
   const handleReviewSubmit = async (e) => {
